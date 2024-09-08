@@ -25,21 +25,43 @@ const RawData = () => {
           }
         );
 
-        if (response.status === 200) {
+        if (response.status === 200 && response.data.data.length > 0) {
           setData(response.data.data);
+          console.log(response.data.data);
           setFilteredData(response.data.data); // Initialize filtered data
+          return true; // Indicate data is fetched
         }
       } catch (error) {
         console.log(error);
       }
+      return false; // Indicate fetch failed or data is not yet available
     };
-    fetchData();
 
-    const intervalId = setInterval(fetchData, 2000);
+    // Fetch data immediately and then set an interval
+    fetchData().then((dataFetched) => {
+      if (!dataFetched) {
+        const intervalId = setInterval(async () => {
+          const dataFetchedInInterval = await fetchData();
+          if (dataFetchedInInterval) {
+            clearInterval(intervalId); // Stop fetching once data is fetched
+          }
+        }, 2000);
 
-    // Clear interval on component unmount
-    return () => clearInterval(intervalId);
+        // Clear interval on component unmount
+        return () => clearInterval(intervalId);
+      }
+    });
   }, []);
+
+  // Utility function to handle and format date strings
+  const formatDate = (dateString) => {
+    try {
+      const validDate = dateString.split(" ")[0]; // Get only the date part (before the time)
+      return new Date(validDate).toLocaleDateString(); // Format as needed (MM/DD/YYYY)
+    } catch (error) {
+      return "Invalid Date"; // Fallback in case of a format error
+    }
+  };
 
   // Filter data by search date
   const handleSearch = (e) => {
@@ -186,7 +208,7 @@ const RawData = () => {
           <tbody style={{ textAlign: "center" }}>
             {currentItems.map((dat) => (
               <tr key={dat._id}>
-                <td>{new Date(dat.date).toLocaleDateString()}</td>
+                <td>{formatDate(dat.date)}</td>
                 <td>{dat.fullRange.toFixed()}</td>
                 <td>{dat.current_miles.toFixed()}</td>
                 <td>{dat.lost_miles.toFixed()}</td>
