@@ -34,6 +34,11 @@ const RawData = () => {
       }
     };
     fetchData();
+
+    const intervalId = setInterval(fetchData, 2000);
+
+    // Clear interval on component unmount
+    return () => clearInterval(intervalId);
   }, []);
 
   // Filter data by search date
