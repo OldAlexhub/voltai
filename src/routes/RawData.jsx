@@ -27,7 +27,7 @@ const RawData = () => {
 
         if (response.status === 200 && response.data.data.length > 0) {
           setData(response.data.data);
-          console.log(response.data.data);
+          // console.log(response.data.data);
           setFilteredData(response.data.data); // Initialize filtered data
           return true; // Indicate data is fetched
         }
