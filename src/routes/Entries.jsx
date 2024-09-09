@@ -33,7 +33,7 @@ const Entries = () => {
         fullRange: Number(fullRange), // Convert to number
       };
 
-      console.log("Submitting data:", parsedData); // Log parsed data
+      //console.log("Submitting data:", parsedData); // Log parsed data
 
       const response = await axios.post(
         process.env.REACT_APP_POST_DATA,
@@ -56,7 +56,7 @@ const Entries = () => {
         message: "Failed to submit data. Please try again.",
         type: "danger",
       });
-      console.error("Error submitting data:", error.response.data); // Log error details
+      //console.error("Error submitting data:", error.response.data); // Log error details
     }
   };
   return (
