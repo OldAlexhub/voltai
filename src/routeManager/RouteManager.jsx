@@ -7,7 +7,8 @@ import Signup from "../routes/Signup";
 import Entries from "../routes/Entries";
 import PredictiveAnalysis from "../routes/PredictiveAnalysis";
 import RawData from "../routes/RawData";
-import ProtectedRoute from "../components/ProtectedRoute"; // Import the protected route
+import ProtectedRoute from "../components/ProtectedRoute";
+import PredictedRange from "../components/PredictedRange";
 
 const RouteManager = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(
@@ -54,6 +55,14 @@ const RouteManager = () => {
             element={
               <ProtectedRoute isLoggedIn={isLoggedIn}>
                 <PredictiveAnalysis />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="predictiverange"
+            element={
+              <ProtectedRoute isLoggedIn={isLoggedIn}>
+                <PredictedRange />
               </ProtectedRoute>
             }
           />
