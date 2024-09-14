@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Logo from "../images/logo.webp";
 import axios from "axios";
 import { CSVLink } from "react-csv"; // Library for CSV download
+import { format } from "date-fns"; // Import date-fns for date formatting
 
 const RawData = () => {
   const [data, setData] = useState([]);
@@ -45,7 +46,7 @@ const RawData = () => {
           if (dataFetchedInInterval) {
             clearInterval(intervalId); // Stop fetching once data is fetched
           }
-        }, 2000);
+        }, 10000);
 
         // Clear interval on component unmount
         return () => clearInterval(intervalId);
@@ -53,11 +54,11 @@ const RawData = () => {
     });
   }, []);
 
-  // Utility function to handle and format date strings
+  // Utility function to handle and format date strings using date-fns
   const formatDate = (dateString) => {
     try {
       const validDate = dateString.split(" ")[0]; // Get only the date part (before the time)
-      return new Date(validDate).toLocaleDateString(); // Format as needed (MM/DD/YYYY)
+      return format(new Date(validDate), "MM/dd/yyyy"); // Format as needed (MM/DD/YYYY)
     } catch (error) {
       return "Invalid Date"; // Fallback in case of a format error
     }
@@ -208,7 +209,11 @@ const RawData = () => {
           <tbody style={{ textAlign: "center" }}>
             {currentItems.map((dat) => (
               <tr key={dat._id}>
-                <td>{formatDate(dat.date)}</td>
+                <td>
+                  {isNaN(new Date(dat.date))
+                    ? "Invalid Date"
+                    : formatDate(dat.date)}
+                </td>
                 <td>{dat.fullRange.toFixed()}</td>
                 <td>{dat.current_miles.toFixed()}</td>
                 <td>{dat.lost_miles.toFixed()}</td>
