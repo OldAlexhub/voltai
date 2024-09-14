@@ -1,4 +1,4 @@
-import React from "react";
+ import React from "react";
 import PredictedRange from "../components/PredictedRange";
 import LostMiles from "../components/LostMiles";
 import Percentage from "../components/Percentage";
@@ -33,8 +33,8 @@ const styles = {
     padding: '20px',
     minHeight: '100vh',
     display: 'flex',
-    justifyContent: 'center',  // Ensure charts are centered
-    alignItems: 'center',      // Center content vertically
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   section: {
     marginBottom: '50px',
@@ -51,10 +51,11 @@ const styles = {
   },
   gridContainer: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', // Responsive grid layout
-    gap: '40px', // Larger gap for readability
+    gridTemplateColumns: '1fr', // Stacks all charts on mobile
+    gap: '40px', // More spacing between the charts
     justifyItems: 'center',
-    alignItems: 'center',
+    width: '100%',
+    maxWidth: '1200px',
   },
   card: {
     width: '100%',
@@ -70,7 +71,7 @@ const styles = {
     transition: 'transform 0.3s',
   },
   centeredCard: {
-    gridColumn: '1 / span 2', // Span across two columns when space allows
+    gridColumn: '1 / -1', // Ensures the bottom chart is centered across the full width
     width: '100%',
     maxWidth: '600px',
     height: '450px',
