@@ -32,9 +32,13 @@ const styles = {
     backgroundColor: '#121212',
     padding: '20px',
     minHeight: '100vh',
+    display: 'flex',
+    justifyContent: 'center',  // Ensure charts are centered
+    alignItems: 'center',      // Center content vertically
   },
   section: {
     marginBottom: '50px',
+    width: '100%',
   },
   title: {
     textAlign: 'center',
@@ -48,8 +52,7 @@ const styles = {
   gridContainer: {
     display: 'grid',
     gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', // Responsive grid layout
-    gap: '40px',
-    padding: '20px',
+    gap: '40px', // Larger gap for readability
     justifyItems: 'center',
     alignItems: 'center',
   },
@@ -67,7 +70,7 @@ const styles = {
     transition: 'transform 0.3s',
   },
   centeredCard: {
-    gridColumn: '1 / span 2', // Span both columns when there is space
+    gridColumn: '1 / span 2', // Span across two columns when space allows
     width: '100%',
     maxWidth: '600px',
     height: '450px',
