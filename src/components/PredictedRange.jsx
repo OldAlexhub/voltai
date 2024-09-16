@@ -30,24 +30,21 @@ ChartJS.register(
 const averageByDate = (data) => {
   const groupedData = data.reduce((acc, item) => {
     const date = new Date(item.ds).toISOString().split("T")[0]; // Extract the date part (ignore time)
-
-    // Initialize the group if it doesn't exist
     if (!acc[date]) {
       acc[date] = { sum: 0, count: 0 };
     }
-
-    // Sum the yhat values and keep track of the count for averaging
     acc[date].sum += item.yhat;
     acc[date].count += 1;
-
     return acc;
   }, {});
 
-  // Convert the grouped object into an array of { ds (date), yhat (average) }
-  return Object.keys(groupedData).map((date) => ({
-    ds: date,
-    yhat: groupedData[date].sum / groupedData[date].count, // Calculate average yhat for the date
-  }));
+  // Convert grouped object to array and sort by date
+  return Object.keys(groupedData)
+    .map((date) => ({
+      ds: date,
+      yhat: groupedData[date].sum / groupedData[date].count, // Calculate average yhat for the date
+    }))
+    .sort((a, b) => new Date(a.ds) - new Date(b.ds)); // Sort by date
 };
 
 const PredictedRange = () => {
@@ -114,6 +111,9 @@ const PredictedRange = () => {
         type: "time", // Use time for the X-axis
         time: {
           unit: "day", // Display by day (ignoring time)
+        },
+        ticks: {
+          source: "data", // Use data source for better tick accuracy
         },
       },
       y: {
