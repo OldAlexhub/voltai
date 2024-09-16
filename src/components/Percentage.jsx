@@ -41,10 +41,10 @@ const averageByDate = (data) => {
   // Return array of {ds (date), percentage (average for the date)} and sort by date
   return Object.keys(groupedData)
     .map((date) => ({
-      ds: date,
+      ds: new Date(date), // Convert back to Date object for proper sorting and rendering
       percentage: groupedData[date].sum / groupedData[date].count, // Calculate average percentage for the date
     }))
-    .sort((a, b) => new Date(a.ds) - new Date(b.ds)); // Sort by date
+    .sort((a, b) => a.ds - b.ds); // Sort by Date object
 };
 
 const Percentage = () => {
@@ -69,7 +69,7 @@ const Percentage = () => {
         if (response.status === 200) {
           // Filter the data to include only future dates and calculate the percentage
           const filteredData = response.data.data
-            .filter((item) => new Date(item.ds) >= new Date())
+            .filter((item) => new Date(item.ds) >= new Date()) // Filter future dates
             .map((item) => ({
               ...item,
               percentage: (item.yhat / fullRange) * 100, // Calculate percentage of yhat from fullRange
@@ -89,7 +89,7 @@ const Percentage = () => {
   }, [fullRange]); // Re-run if fullRange changes
 
   const chartData = {
-    labels: data.map((item) => item.ds), // Sorted Dates on the X-axis (date only)
+    labels: data.map((item) => item.ds), // Sorted Dates on the X-axis
     datasets: [
       {
         label: "Percentage of Full Range",
@@ -141,3 +141,4 @@ const Percentage = () => {
 };
 
 export default Percentage;
+
