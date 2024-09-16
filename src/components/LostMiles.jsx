@@ -38,16 +38,18 @@ const averageByDate = (data) => {
     return acc;
   }, {});
 
-  // Return array of {ds (date), lostMiles (average for the date)}
-  return Object.keys(groupedData).map((date) => ({
-    ds: date,
-    lostMiles: groupedData[date].sum / groupedData[date].count, // Calculate average lostMiles for the date
-  }));
+  // Return array of {ds (date), lostMiles (average for the date)} and sort by date
+  return Object.keys(groupedData)
+    .map((date) => ({
+      ds: date,
+      lostMiles: groupedData[date].sum / groupedData[date].count, // Calculate average lostMiles for the date
+    }))
+    .sort((a, b) => new Date(a.ds) - new Date(b.ds)); // Sort by date
 };
 
 const LostMiles = () => {
   const [data, setData] = useState([]);
-  const fullRange = parseFloat(localStorage.getItem("fullRange")); // Fetch fullRange only once outside useEffect
+  const fullRange = parseFloat(localStorage.getItem("fullRange")); // Get fullRange from localStorage once
 
   useEffect(() => {
     const fetchData = async () => {
@@ -76,7 +78,7 @@ const LostMiles = () => {
           // Calculate the average lostMiles for each date (ignoring time)
           const averagedData = averageByDate(filteredData);
 
-          // Set the averaged data for the chart
+          // Set the sorted averaged data for the chart
           setData(averagedData);
         }
       } catch (error) {
@@ -87,7 +89,7 @@ const LostMiles = () => {
   }, [fullRange]); // Re-run if fullRange changes
 
   const chartData = {
-    labels: data.map((item) => item.ds), // Dates on the X-axis (date only)
+    labels: data.map((item) => item.ds), // Sorted Dates on the X-axis (date only)
     datasets: [
       {
         label: "Lost Miles",
@@ -107,7 +109,7 @@ const LostMiles = () => {
     maintainAspectRatio: false, // Allows the chart to fill the container
     scales: {
       x: {
-        type: "time", // Set X axis as time
+        type: "time", // Use time for the X-axis
         time: {
           unit: "day", // Display by day (ignoring time)
         },
