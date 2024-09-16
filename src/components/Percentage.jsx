@@ -47,13 +47,13 @@ const averageByDate = (data) => {
 
 const Percentage = () => {
   const [data, setData] = useState([]);
+  const fullRange = parseFloat(localStorage.getItem("fullRange")); // Get fullRange from localStorage once
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const token = localStorage.getItem("token");
         const userId = localStorage.getItem("userId");
-        const fullRange = parseFloat(localStorage.getItem("fullRange")); // Get fullRange from localStorage
 
         const response = await axios.get(
           `${process.env.REACT_APP_ANALYZED}/${userId}`,
@@ -84,7 +84,7 @@ const Percentage = () => {
       }
     };
     fetchData();
-  }, []);
+  }, [fullRange]); // UseEffect is dependent on fullRange, which doesn't change often
 
   const chartData = {
     labels: data.map((item) => item.ds), // Dates on the X-axis (date only)
@@ -132,8 +132,6 @@ const Percentage = () => {
         Percentage of Full Range
       </h4>
       <div style={{ position: "relative", width: "100%", height: "350px" }}>
-        {" "}
-        {/* Reduced height */}
         <Line data={chartData} options={options} />
       </div>
     </div>
