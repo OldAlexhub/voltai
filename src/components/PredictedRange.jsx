@@ -30,15 +30,20 @@ ChartJS.register(
 const averageByDate = (data) => {
   const groupedData = data.reduce((acc, item) => {
     const date = new Date(item.ds).toISOString().split("T")[0]; // Extract the date part (ignore time)
+
+    // Initialize the group if it doesn't exist
     if (!acc[date]) {
       acc[date] = { sum: 0, count: 0 };
     }
+
+    // Sum the yhat values and keep track of the count for averaging
     acc[date].sum += item.yhat;
     acc[date].count += 1;
+
     return acc;
   }, {});
 
-  // Return array of {ds (date), yhat (average of yhat for the date)}
+  // Convert the grouped object into an array of { ds (date), yhat (average) }
   return Object.keys(groupedData).map((date) => ({
     ds: date,
     yhat: groupedData[date].sum / groupedData[date].count, // Calculate average yhat for the date
@@ -71,6 +76,9 @@ const PredictedRange = () => {
 
           // Calculate the average yhat for each date (ignoring time)
           const averagedData = averageByDate(filteredData);
+          
+          // Log the averaged data for debugging
+          console.log(averagedData);
 
           // Set the averaged data for the chart
           setData(averagedData);
@@ -91,7 +99,7 @@ const PredictedRange = () => {
         borderColor: "rgba(75, 192, 192, 1)",
         backgroundColor: "rgba(75, 192, 192, 0.2)",
         fill: false, // Line without fill
-        tension: 0, // Increase smoothness of the line
+        tension: 0, // Set to 0 to remove smoothing and reduce erratic curves
         pointRadius: 2, // Reduce point size
         pointBackgroundColor: "rgba(75, 192, 192, 1)", // Color of the points
       },
@@ -126,8 +134,6 @@ const PredictedRange = () => {
     <div style={{ width: "100%", height: "100%" }}>
       <h4 style={{ color: "white", textAlign: "center" }}>Predicted Range</h4>
       <div style={{ position: "relative", width: "100%", height: "350px" }}>
-        {" "}
-        {/* Reduced height */}
         <Line data={chartData} options={options} />
       </div>
     </div>
