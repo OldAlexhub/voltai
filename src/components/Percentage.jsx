@@ -38,11 +38,13 @@ const averageByDate = (data) => {
     return acc;
   }, {});
 
-  // Return array of {ds (date), percentage (average for the date)}
-  return Object.keys(groupedData).map((date) => ({
-    ds: date,
-    percentage: groupedData[date].sum / groupedData[date].count, // Calculate average percentage for the date
-  }));
+  // Return array of {ds (date), percentage (average for the date)} and sort by date
+  return Object.keys(groupedData)
+    .map((date) => ({
+      ds: date,
+      percentage: groupedData[date].sum / groupedData[date].count, // Calculate average percentage for the date
+    }))
+    .sort((a, b) => new Date(a.ds) - new Date(b.ds)); // Sort by date
 };
 
 const Percentage = () => {
@@ -76,7 +78,7 @@ const Percentage = () => {
           // Calculate the average percentage for each date (ignoring time)
           const averagedData = averageByDate(filteredData);
 
-          // Set the averaged data for the chart
+          // Set the sorted averaged data for the chart
           setData(averagedData);
         }
       } catch (error) {
@@ -84,10 +86,10 @@ const Percentage = () => {
       }
     };
     fetchData();
-  }, [fullRange]); // UseEffect is dependent on fullRange, which doesn't change often
+  }, [fullRange]); // Re-run if fullRange changes
 
   const chartData = {
-    labels: data.map((item) => item.ds), // Dates on the X-axis (date only)
+    labels: data.map((item) => item.ds), // Sorted Dates on the X-axis (date only)
     datasets: [
       {
         label: "Percentage of Full Range",
