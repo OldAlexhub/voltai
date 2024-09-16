@@ -47,13 +47,13 @@ const averageByDate = (data) => {
 
 const LostMiles = () => {
   const [data, setData] = useState([]);
+  const fullRange = parseFloat(localStorage.getItem("fullRange")); // Fetch fullRange only once outside useEffect
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const token = localStorage.getItem("token");
         const userId = localStorage.getItem("userId");
-        const fullRange = parseFloat(localStorage.getItem("fullRange")); // Get fullRange from localStorage
 
         const response = await axios.get(
           `${process.env.REACT_APP_ANALYZED}/${userId}`,
@@ -65,7 +65,7 @@ const LostMiles = () => {
         );
 
         if (response.status === 200) {
-          // Filter the data to include only future dates and calculate the lost miles
+          // Filter the data to include only future dates and calculate lost miles
           const filteredData = response.data.data
             .filter((item) => new Date(item.ds) >= new Date())
             .map((item) => ({
@@ -84,7 +84,7 @@ const LostMiles = () => {
       }
     };
     fetchData();
-  }, []);
+  }, [fullRange]); // Re-run if fullRange changes
 
   const chartData = {
     labels: data.map((item) => item.ds), // Dates on the X-axis (date only)
@@ -130,8 +130,6 @@ const LostMiles = () => {
     <div style={{ width: "100%", height: "100%" }}>
       <h4 style={{ color: "white", textAlign: "center" }}>Lost Miles</h4>
       <div style={{ position: "relative", width: "100%", height: "350px" }}>
-        {" "}
-        {/* Reduced height */}
         <Line data={chartData} options={options} />
       </div>
     </div>
