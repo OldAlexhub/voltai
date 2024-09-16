@@ -91,7 +91,7 @@ const PredictedRange = () => {
         borderColor: "rgba(75, 192, 192, 1)",
         backgroundColor: "rgba(75, 192, 192, 0.2)",
         fill: false, // Line without fill
-        tension: 0.3, // Increase smoothness of the line
+        tension: 0, // Increase smoothness of the line
         pointRadius: 2, // Reduce point size
         pointBackgroundColor: "rgba(75, 192, 192, 1)", // Color of the points
       },
